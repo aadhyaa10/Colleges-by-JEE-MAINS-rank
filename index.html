@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rankset — Premium JEE Main College Predictor</title>
+  <meta name="description" content="Predict your engineering college admission chances for JoSAA/CSAB, UPTAC, and MPDTE based on your JEE Main CRL rank.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Animated Background Space -->
+  <div class="space-background">
+    <div class="star star-1"></div>
+    <div class="star star-2"></div>
+    <div class="star star-3"></div>
+    <div class="constellation-glow"></div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo-container">
+        <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <span class="logo-text">Rankset</span>
+        <div class="logo-dot-wrapper">
+          <span class="logo-dot"></span>
+          <span class="logo-dot-ripple"></span>
+          <span class="logo-dot-ripple delay-1"></span>
+        </div>
+      </div>
+      <h1>JEE Main College Predictor</h1>
+      <p class="subtitle">Enter your rank and choices below to view your admission probabilities for JoSAA/CSAB, UPTAC, and MPDTE counselling.</p>
+    </header>
+
+    <!-- Predictor Controls Card -->
+    <section class="glass-card">
+      <form id="predictor-form" onsubmit="event.preventDefault();">
+        <div class="input-grid">
+          <!-- JEE CRL Rank Input -->
+          <div class="input-group">
+            <label for="crl-rank">JEE Main Rank (CRL)</label>
+            <input type="number" id="crl-rank" class="input-control" placeholder="e.g. 15000" min="1" max="1000000" required>
+          </div>
+
+          <!-- Category Selection -->
+          <div class="input-group">
+            <label for="category">Category</label>
+            <select id="category" class="input-control">
+              <option value="GEN">General (GEN)</option>
+              <option value="OBC-NCL">OBC-NCL</option>
+              <option value="SC">SC</option>
+              <option value="ST">ST</option>
+              <option value="EWS">EWS</option>
+            </select>
+          </div>
+
+          <!-- Home State Selection -->
+          <div class="input-group">
+            <label for="home-state">Home State</label>
+            <select id="home-state" class="input-control">
+              <option value="Andhra Pradesh">Andhra Pradesh</option>
+              <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+              <option value="Assam">Assam</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Chandigarh">Chandigarh</option>
+              <option value="Chhattisgarh">Chhattisgarh</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Goa">Goa</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Haryana">Haryana</option>
+              <option value="Himachal Pradesh">Himachal Pradesh</option>
+              <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+              <option value="Jharkhand">Jharkhand</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Madhya Pradesh" selected>Madhya Pradesh</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Manipur">Manipur</option>
+              <option value="Meghalaya">Meghalaya</option>
+              <option value="Mizoram">Mizoram</option>
+              <option value="Nagaland">Nagaland</option>
+              <option value="Odisha">Odisha</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Sikkim">Sikkim</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Telangana">Telangana</option>
+              <option value="Tripura">Tripura</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Uttarakhand">Uttarakhand</option>
+              <option value="West Bengal">West Bengal</option>
+            </select>
+          </div>
+
+          <!-- Gender selection (for female reservation quota support) -->
+          <div class="input-group">
+            <label for="gender">Seat Pool (Gender)</label>
+            <select id="gender" class="input-control">
+              <option value="Gender-Neutral">Gender-Neutral</option>
+              <option value="Female-Only">Female-Only (Quota)</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="predict-btn" class="btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width: 1.25rem; height: 1.25rem;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          Predict Colleges
+        </button>
+      </form>
+    </section>
+
+    <!-- Predictor Tabs & Results -->
+    <main>
+      <!-- Clickable Counselling Tabs -->
+      <div class="tabs-container">
+        <button class="tab-btn active" data-tab="josaa" id="tab-josaa">
+          <span>JoSAA / CSAB</span>
+          <span class="tab-badge" id="badge-josaa">NITs & IIITs</span>
+        </button>
+        <button class="tab-btn" data-tab="uptac" id="tab-uptac">
+          <span>UPTAC Counselling</span>
+          <span class="tab-badge" id="badge-uptac">AKTU & UP State</span>
+        </button>
+        <button class="tab-btn" data-tab="mpdte" id="tab-mpdte">
+          <span>MPDTE Counselling</span>
+          <span class="tab-badge" id="badge-mpdte">SGSITS & MP State</span>
+        </button>
+      </div>
+
+      <!-- Results Display Panel -->
+      <section class="glass-card" style="padding: 1.5rem 1.75rem 2.25rem;">
+        
+        <!-- Search and Statistics Panel -->
+        <div class="results-header-panel">
+          <div class="search-wrapper">
+            <!-- Search icon SVG -->
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input type="text" id="results-search" class="search-input" placeholder="Search by college or branch..." disabled>
+          </div>
+          <div class="stats-summary" id="stats-text">
+            Enter rank above and click <strong>Predict Colleges</strong> to see results.
+          </div>
+        </div>
+
+        <!-- Predictor Results Container -->
+        <div id="results-container">
+          <!-- Initial State (Before prediction) -->
+          <div class="empty-state">
+            <svg class="empty-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            <h3>Ready for Prediction</h3>
+            <p>Fill out your JEE CRL Rank, Category, and Home State, then hit Predict to display your admission chances.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Info Cards / Explainer Cards -->
+    <section class="info-section">
+      <div class="info-card">
+        <div class="info-title">
+          <!-- Settings Icon -->
+          <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg>
+          Quota Matching
+        </div>
+        <p class="info-text">The predictor analyzes your Home State input to match you with Home State (HS) seats in NITs or State counselling (UPTAC/MPDTE). Other candidates are mapped to Other State (OS) or All India (AI) quotas.</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-title">
+          <!-- Graph Icon -->
+          <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
+          </svg>
+          Probabilities & Chances
+        </div>
+        <p class="info-text"><strong>High:</strong> Your rank is well within last year's closing ranks. <strong>Medium:</strong> Borderline results indicating a moderate likelihood. <strong>Low:</strong> Harder targets requiring favorable cutoff shifts.</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-title">
+          <!-- Shield Icon -->
+          <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          Recent Data
+        </div>
+        <p class="info-text">Calculations are based on opening and closing ranks from recent official counselling rounds. Data is processed locally in real-time, giving you instantaneous insights.</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>Rankset is a sandbox simulation built for engineering aspirants. Always refer to official <a href="https://josaa.nic.in" target="_blank">JoSAA</a>, <a href="https://uptac.admissions.nic.in" target="_blank">UPTAC</a>, and <a href="https://dte.mponline.gov.in" target="_blank">MPDTE</a> portals for official seat matrix updates.</p>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
